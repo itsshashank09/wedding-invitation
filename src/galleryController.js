@@ -12,6 +12,12 @@ export class GalleryController {
     this.nextImg = document.getElementById('gallery-photo-next');
     this.prevBtn = document.getElementById('gallery-prev');
     this.nextBtn = document.getElementById('gallery-next');
+    this.photoContainer = document.querySelector('.gallery-photo-container');
+
+    // Full photo modal elements
+    this.lightbox = document.getElementById('gallery-lightbox');
+    this.lightboxImg = document.getElementById('gallery-lightbox-img');
+    this.lightboxClose = document.getElementById('gallery-lightbox-close');
 
     this._loadPhotos();
   }
@@ -53,16 +59,48 @@ export class GalleryController {
       });
     }
 
-    // Touch swipe support on mobile
+    // Tap/click photo container to open full uncropped photo
+    if (this.photoContainer) {
+      this.photoContainer.addEventListener('click', (e) => {
+        e.preventDefault();
+        this.openFullPhoto();
+      });
+    }
+
+    // Lightbox dismissal handlers
+    if (this.lightbox) {
+      this.lightbox.addEventListener('click', (e) => {
+        // Close if clicking anywhere outside the image or on close button / backdrop
+        this.closeFullPhoto();
+      });
+    }
+
+    if (this.lightboxClose) {
+      this.lightboxClose.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        this.closeFullPhoto();
+      });
+    }
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        this.closeFullPhoto();
+      }
+    });
+
+    // Touch swipe & tap support on mobile
     const carousel = document.getElementById('gallery-carousel');
     if (carousel) {
       let touchStartX = 0;
       let touchStartY = 0;
+      let touchStartTime = 0;
       
       carousel.addEventListener('touchstart', (e) => {
         if (e.touches.length === 1) {
           touchStartX = e.touches[0].clientX;
           touchStartY = e.touches[0].clientY;
+          touchStartTime = Date.now();
         }
       }, { passive: true });
 
@@ -70,17 +108,42 @@ export class GalleryController {
         if (e.changedTouches.length === 1) {
           const deltaX = e.changedTouches[0].clientX - touchStartX;
           const deltaY = e.changedTouches[0].clientY - touchStartY;
+          const deltaTime = Date.now() - touchStartTime;
           
-          if (Math.abs(deltaX) > 40 && Math.abs(deltaX) > Math.abs(deltaY)) {
+          if (Math.abs(deltaX) > 35 && Math.abs(deltaX) > Math.abs(deltaY)) {
+            // Horizontal swipe detected -> Navigate photos
             if (deltaX < 0) {
               this.showNext();
             } else {
               this.showPrev();
             }
+          } else if (Math.abs(deltaX) < 18 && Math.abs(deltaY) < 18 && deltaTime < 450) {
+            // Clean stationary tap -> Open full photo
+            const target = e.target;
+            // Ensure tap was not on navigation arrow buttons
+            if (target && !target.closest('.gallery-btn')) {
+              this.openFullPhoto();
+            }
           }
         }
       }, { passive: true });
     }
+  }
+
+  openFullPhoto() {
+    if (!this.lightbox || !this.lightboxImg) return;
+    const currentSrc = this.photos[this.currentIndex] || (this.currentImg ? this.currentImg.src : '');
+    if (!currentSrc) return;
+
+    this.lightboxImg.src = currentSrc;
+    this.lightbox.classList.add('active');
+    this.lightbox.setAttribute('aria-hidden', 'false');
+  }
+
+  closeFullPhoto() {
+    if (!this.lightbox) return;
+    this.lightbox.classList.remove('active');
+    this.lightbox.setAttribute('aria-hidden', 'true');
   }
 
   showNext() {
