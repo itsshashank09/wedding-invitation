@@ -154,10 +154,23 @@
           <line x1="6" y1="6" x2="18" y2="18"></line>
         </svg>
       </button>
+
+      <!-- Lightbox Navigation Arrows -->
+      <button id="gallery-lightbox-prev" class="gallery-lightbox-nav gallery-lightbox-nav-prev" aria-label="Previous photo">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#ffd700" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+      </button>
+      <button id="gallery-lightbox-next" class="gallery-lightbox-nav gallery-lightbox-nav-next" aria-label="Next photo">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#ffd700" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="9 6 15 12 9 18"></polyline>
+        </svg>
+      </button>
+
       <div class="gallery-lightbox-frame">
         <img id="gallery-lightbox-img" src="" alt="Full view photo" />
       </div>
-      <div class="gallery-lightbox-caption">Tap anywhere to close</div>
+      <div id="gallery-lightbox-caption" class="gallery-lightbox-caption">Swipe to browse • Tap outside to close</div>
     </div>
   </div>
 
