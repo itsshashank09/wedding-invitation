@@ -17,3 +17,6 @@ Thumbs.db
 
 # Vite cache
 .vite/
+
+# Vercel
+.vercel/
