@@ -164,6 +164,148 @@ body {
   transform: translateZ(0);
 }
 
+/* =========================================
+   INTERACTIVE GANESH OPENING PROMPT
+   ========================================= */
+.ganesh-prompt {
+  position: absolute;
+  bottom: 34px;
+  bottom: max(34px, env(safe-area-inset-bottom, 24px));
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 25;
+  pointer-events: none; /* Stage receives click/tap directly */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  animation: ganeshPromptEntrance 1.2s ease-out 0.4s forwards;
+  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+              visibility 0.5s;
+}
+
+.ganesh-prompt.hidden {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  transform: translate(-50%, 14px) scale(0.94) !important;
+  pointer-events: none !important;
+  animation: none !important;
+}
+
+.ganesh-prompt-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 9px 20px;
+  background: rgba(28, 14, 8, 0.72);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(226, 188, 88, 0.65);
+  border-radius: 9999px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5), 0 0 16px rgba(212, 175, 55, 0.25);
+  animation: ganeshPromptBreathe 2.8s ease-in-out infinite;
+  will-change: transform, box-shadow, border-color;
+}
+
+.ganesh-prompt-pulse-beacon {
+  position: relative;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #f7e4af;
+  box-shadow: 0 0 8px #d4af37;
+  flex-shrink: 0;
+}
+
+.ganesh-prompt-pulse-beacon::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(226, 188, 88, 0.85);
+  animation: beaconRipple 1.8s ease-out infinite;
+}
+
+@keyframes beaconRipple {
+  0% {
+    transform: scale(0.6);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(2.4);
+    opacity: 0;
+  }
+}
+
+.ganesh-prompt-text {
+  font-family: 'Cinzel', serif;
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #fff2c2;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8), 0 0 8px rgba(226, 188, 88, 0.4);
+  white-space: nowrap;
+}
+
+/* Default (Touch / Mobile) text */
+.ganesh-prompt-text-desktop {
+  display: none;
+}
+.ganesh-prompt-text-touch {
+  display: inline;
+}
+
+/* Mouse / Desktop fine pointer devices */
+@media (hover: hover) and (pointer: fine) {
+  .ganesh-prompt-text-desktop {
+    display: inline;
+  }
+  .ganesh-prompt-text-touch {
+    display: none;
+  }
+}
+
+@keyframes ganeshPromptEntrance {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, 14px);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+@keyframes ganeshPromptBreathe {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5), 0 0 14px rgba(212, 175, 55, 0.2);
+    border-color: rgba(226, 188, 88, 0.55);
+  }
+  50% {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6), 0 0 22px rgba(212, 175, 55, 0.45);
+    border-color: rgba(247, 228, 175, 0.9);
+  }
+}
+
+@media (max-width: 480px) {
+  .ganesh-prompt {
+    bottom: max(26px, env(safe-area-inset-bottom, 20px));
+  }
+  .ganesh-prompt-pill {
+    padding: 7px 16px;
+    gap: 8px;
+  }
+  .ganesh-prompt-text {
+    font-size: 0.68rem;
+    letter-spacing: 1.5px;
+  }
+}
+
 /* Floating Scroll Cue on Front Page */
 .scroll-cue {
   position: absolute;

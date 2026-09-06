@@ -15,6 +15,7 @@ export class CinemaController {
     this.sceneGanesh = document.getElementById('scene-ganesh');
     this.ganeshPoster = document.getElementById('ganesh-poster');
     this.ganeshVideo = document.getElementById('ganesh-video');
+    this.ganeshPrompt = document.getElementById('ganesh-prompt');
 
     this.sceneFront = document.getElementById('scene-front');
     this.frontPoster = document.getElementById('front-poster');
@@ -185,6 +186,11 @@ export class CinemaController {
 
     this._transitionTriggered = false;
 
+    // Immediately hide prompt on interaction
+    if (this.ganeshPrompt) {
+      this.ganeshPrompt.classList.add('hidden');
+    }
+
     // Both videos are strictly muted per user request
     this.ganeshVideo.muted = true;
     this.frontVideo.muted = true;
@@ -306,6 +312,9 @@ export class CinemaController {
     this.ganeshVideo.pause();
     this.ganeshVideo.currentTime = 0;
     this.ganeshPoster.classList.remove('hidden');
+    if (this.ganeshPrompt) {
+      this.ganeshPrompt.classList.remove('hidden');
+    }
 
     this.frontVideo.pause();
     this.frontVideo.currentTime = 0;
