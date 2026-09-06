@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-locked">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>Wedding Invitation | Ranjitha &amp; Sushanth</title>
+  <!-- Google Fonts: Playfair Display, Cinzel, Great Vibes, Marcellus, Montserrat -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Great+Vibes&family=Marcellus&family=Montserrat:wght@400;500;600&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/src/style.css" />
+</head>
+<body class="scroll-locked">
+  <!-- Unified Continuous Invitation Card Stage (Both pages feel like one seamless unit) -->
+  <main id="invitation-stage" class="invitation-stage">
+    <!-- Section 1: Hero Cinema (Ganesh Intro + Front Page Video) -->
+    <section id="section-hero" class="section-hero">
+      <div id="viewport-stage" class="viewport-stage">
+        <!-- Scene 1: Ganesh Intro -->
+        <div id="scene-ganesh" class="scene-layer scene-ganesh active">
+          <img id="ganesh-poster" class="scene-media poster active" src="/assets/ganesh/frame_0001.png" alt="Lord Ganesha" />
+          <video id="ganesh-video" class="scene-media video" playsinline webkit-playsinline x5-playsinline muted preload="auto" src="/assets/vid/Animated%20ganesh.mp4"></video>
+        </div>
+
+        <!-- Scene 2: Front Page Invitation -->
+        <div id="scene-front" class="scene-layer scene-front">
+          <img id="front-poster" class="scene-media poster" src="/assets/front%20page/frame_0001.png" alt="Wedding Invitation Front" />
+          <video id="front-video" class="scene-media video" playsinline webkit-playsinline x5-playsinline muted preload="auto" src="/assets/vid/Wedding_invitation_animation_design_1080p_202609041844_gwr_video_mvp.mp4"></video>
+
+          <!-- Subtle Scroll Cue (Appears only after video completes) -->
+          <div id="scroll-cue" class="scroll-cue" aria-hidden="true">
+            <span class="scroll-cue-text">Scroll to continue</span>
+            <span class="scroll-cue-arrow">⌄</span>
+          </div>
+        </div>
+
+        <!-- The White Flash Transition Bridge -->
+        <div id="white-flash-bridge" class="white-flash-bridge"></div>
+      </div>
+
+      <!-- 3D Gold Embossed Divider on the exact touching boundary -->
+      <img id="between-pages-divider" class="between-pages-seam" src="/assets/between%20pages.png" alt="Ornamental Divider" />
+    </section>
+
+    <!-- Section 2: Page 2/Page 3 Scroll-Reveal Story Section -->
+    <section id="section-invitation" class="section-scroll-reveal">
+      <!-- Image 1: Static Sacred Temple Background -->
+      <img class="invitation-bg" src="/assets/page%202%20background.png" alt="Sacred Temple Scene" />
+
+      <!-- Animated Story Typography Layer (Behind front layer, over background) -->
+      <div id="text-bg-layer" class="text-bg-layer">
+        <img class="text-bg-asset" src="/assets/text%20bg.png" alt="Two Souls One Beautiful Story - Ranjitha &amp; Sushanth" />
+      </div>
+
+      <!-- Image 2: Dual Decorative Framing Panels (Sits on top of text layer) -->
+      <!-- Left Panel Layer -->
+      <div id="panel-left" class="panel-layer panel-left">
+        <img class="panel-asset" src="/assets/page%202%20front%20leyar.png" alt="Decorative Left Frame" />
+      </div>
+
+      <!-- Right Panel Layer -->
+      <div id="panel-right" class="panel-layer panel-right">
+        <img class="panel-asset" src="/assets/page%202%20front%20leyar.png" alt="Decorative Right Frame" />
+      </div>
+    </section>
+
+    <!-- Section 3: Gallery Page -->
+    <section id="section-gallery" class="section-gallery">
+      <!-- 3D Gold Embossed Divider on the exact touching boundary -->
+      <img class="between-pages-seam-top" src="/assets/between%20pages.png" alt="Ornamental Divider" />
+      
+      <!-- Gallery Background Image -->
+      <img class="gallery-bg" src="/assets/Gallery1.png" alt="Wedding Gallery" />
+
+      <!-- Gallery Carousel -->
+      <div id="gallery-carousel" class="gallery-carousel">
+        <div class="gallery-photo-container">
+          <img id="gallery-photo-current" src="/assets/gallery%20photos/01.JPG" alt="Gallery Photo" />
+          <img id="gallery-photo-next" src="" alt="" />
+        </div>
+        
+        <img class="gallery-frame" src="/assets/image%20holder.png" alt="Image Frame" />
+        
+        <!-- Minimal Translucent Navigation Buttons -->
+        <button id="gallery-prev" class="gallery-btn gallery-btn-prev" aria-label="Previous Photo">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#ffd700" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+        </button>
+        <button id="gallery-next" class="gallery-btn gallery-btn-next" aria-label="Next Photo">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#ffd700" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 6 15 12 9 18"></polyline>
+          </svg>
+        </button>
+      </div>
+    </section>
+
+    <!-- Section 4: Last Page -->
+    <section id="section-last" class="section-last">
+      <!-- 3D Gold Embossed Divider on the exact touching boundary between Gallery and Last Page -->
+      <img class="between-pages-seam-top" src="/assets/between%20pages.png" alt="Ornamental Divider" />
+      
+      <!-- Interactive Google Map embedded inside the circular medallion -->
+      <div class="last-page-map-container">
+        <iframe 
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3868.3993114972322!2d75.0277776!3d14.1713749!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bbb8b306afb7ae3%3A0xe469c1741f763d41!2sShree%20Bhadrakali%20Temple%20and%20Sabhabhavana!5e0!3m2!1sen!2ssg!4v1788697742502!5m2!1sen!2ssg" 
+          width="100%" 
+          height="100%" 
+          style="border:0;" 
+          allowfullscreen="" 
+          loading="lazy" 
+          referrerpolicy="strict-origin-when-cross-origin"
+          title="Shree Bhadrakali Temple and Sabhabhavana Location Map">
+        </iframe>
+      </div>
+
+      <!-- Last Page Background Image with circular cutout on top of the map -->
+      <img class="last-page-bg" src="/assets/last%20page.png" alt="Wedding Invitation Last Page" />
+
+      <!-- Footer at the bottom of the Last Page -->
+      <div id="last-page-footer" class="last-page-footer-container">
+        <img class="last-page-footer-img" src="/assets/Footer.png" alt="Let's Connect - shxweb" />
+        <a href="https://instagram.com/shxweb" target="_blank" rel="noopener noreferrer" class="footer-hotspot hotspot-instagram" aria-label="Instagram shxweb"></a>
+        <a href="https://wa.me/919483030043" target="_blank" rel="noopener noreferrer" class="footer-hotspot hotspot-whatsapp" aria-label="WhatsApp 9483030043"></a>
+        <a href="mailto:shxbuild@gmail.com" class="footer-hotspot hotspot-email" aria-label="Email shxbuild@gmail.com"></a>
+      </div>
+    </section>
+  </main>
+
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
