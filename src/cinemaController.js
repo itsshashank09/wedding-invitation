@@ -30,13 +30,6 @@ export class CinemaController {
     this._isScrollLocked = true;
     this._scrollPreventer = null;
 
-    // Gentle Auto-Scroll State
-    this._autoScrollActive = false;
-    this._autoScrollCancelled = false;
-    this._hasUserScrolled = false;
-    this._autoScrollRaf = null;
-    this._autoScrollTimeout = null;
-    this._cancelAutoScrollHandler = null;
 
     // Bind methods
     this.handleInteraction = this.handleInteraction.bind(this);
@@ -53,7 +46,7 @@ export class CinemaController {
     if (this.ganeshVideo) this.ganeshVideo.muted = true;
     if (this.frontVideo) {
       this.frontVideo.muted = true;
-      this.frontVideo.loop = true;
+      this.frontVideo.loop = false;
     }
 
     // Subscribe to state changes for DOM synchronization
@@ -67,18 +60,10 @@ export class CinemaController {
     // Setup video event listeners
     this._setupVideoListeners();
 
-    // Hide scroll cue once user starts scrolling, and pause/resume video out of viewport to conserve battery
+    // Hide scroll cue once user starts scrolling
     window.addEventListener('scroll', () => {
       if (window.scrollY > 40 && this.scrollCue) {
         this.scrollCue.style.opacity = '0';
-      }
-
-      if (this.frontVideo && this.frontVideo.loop && !this._isScrollLocked) {
-        if (window.scrollY > window.innerHeight * 1.2) {
-          if (!this.frontVideo.paused) this.frontVideo.pause();
-        } else if (window.scrollY < window.innerHeight * 0.8) {
-          if (this.frontVideo.paused) this.frontVideo.play().catch(() => {});
-        }
       }
     }, { passive: true });
 
@@ -113,7 +98,7 @@ export class CinemaController {
   }
 
   /**
-   * Unlocks page scrolling once Front Page video completes first loop
+   * Unlocks page scrolling once Front Page video completes
    */
   _unlockScroll() {
     if (!this._isScrollLocked) return;
@@ -121,103 +106,11 @@ export class CinemaController {
     document.documentElement.classList.remove('scroll-locked');
     document.body.classList.remove('scroll-locked');
 
-    console.log('[CinemaController] Front video completed first loop -> Page scroll unlocked');
+    console.log('[CinemaController] Front video completed -> Page scroll unlocked');
 
     if (this.scrollCue) {
       this.scrollCue.classList.add('visible');
     }
-
-    // Begin slow, majestic auto-scroll downward into Page 2 until user interacts
-    this._startGentleAutoScroll();
-  }
-
-  /**
-   * Gently auto-scrolls down into Page 2 after Front Page video first completes,
-   * until the visitor touches or scrolls manually.
-   */
-  _startGentleAutoScroll() {
-    if (this._hasUserScrolled || this._autoScrollActive) return;
-
-    this._autoScrollActive = true;
-    this._autoScrollCancelled = false;
-
-    // Immediately stop auto-scroll if user touches, moves, wheels, or presses a key
-    this._cancelAutoScrollHandler = () => {
-      this._stopGentleAutoScroll();
-    };
-
-    const cancelEvents = ['touchstart', 'touchmove', 'wheel', 'pointerdown', 'mousedown', 'keydown'];
-    cancelEvents.forEach((evt) => {
-      window.addEventListener(evt, this._cancelAutoScrollHandler, { passive: true, capture: true });
-    });
-
-    // Pause briefly (600ms) after video finishes so the user sees the loop start and scroll cue
-    this._autoScrollTimeout = setTimeout(() => {
-      if (this._autoScrollCancelled) return;
-
-      const targetY = window.innerHeight; // Glide down into Page 2
-      let lastTimestamp = null;
-      let lastExpectedY = window.scrollY || window.pageYOffset;
-      const speedPxPerSec = 75; // Graceful, majestic ~75px/sec
-
-      const step = (timestamp) => {
-        if (this._autoScrollCancelled) return;
-
-        if (!lastTimestamp) lastTimestamp = timestamp;
-        const deltaMs = Math.min(timestamp - lastTimestamp, 50);
-        lastTimestamp = timestamp;
-
-        const currentY = window.scrollY || window.pageYOffset;
-
-        // If user manually altered scroll position (e.g. scrollbar drag or flick), stop immediately
-        if (Math.abs(currentY - lastExpectedY) > 12) {
-          this._stopGentleAutoScroll();
-          return;
-        }
-
-        if (currentY >= targetY) {
-          // Reached Page 2 story view smoothly
-          this._stopGentleAutoScroll();
-          return;
-        }
-
-        const scrollAmount = (speedPxPerSec * deltaMs) / 1000;
-        window.scrollBy(0, scrollAmount);
-        lastExpectedY = window.scrollY || window.pageYOffset;
-
-        this._autoScrollRaf = requestAnimationFrame(step);
-      };
-
-      this._autoScrollRaf = requestAnimationFrame(step);
-    }, 600);
-  }
-
-  _stopGentleAutoScroll() {
-    if (!this._autoScrollActive && !this._autoScrollTimeout && !this._autoScrollRaf) return;
-
-    this._autoScrollActive = false;
-    this._autoScrollCancelled = true;
-    this._hasUserScrolled = true;
-
-    if (this._autoScrollTimeout) {
-      clearTimeout(this._autoScrollTimeout);
-      this._autoScrollTimeout = null;
-    }
-
-    if (this._autoScrollRaf) {
-      cancelAnimationFrame(this._autoScrollRaf);
-      this._autoScrollRaf = null;
-    }
-
-    if (this._cancelAutoScrollHandler) {
-      const cancelEvents = ['touchstart', 'touchmove', 'wheel', 'pointerdown', 'mousedown', 'keydown'];
-      cancelEvents.forEach((evt) => {
-        window.removeEventListener(evt, this._cancelAutoScrollHandler, { capture: true });
-      });
-      this._cancelAutoScrollHandler = null;
-    }
-
-    console.log('[CinemaController] Auto-scroll stopped / User in manual control');
   }
 
   /**
@@ -252,21 +145,18 @@ export class CinemaController {
     });
 
     // Monitor front video playback
-    let lastFrontTime = 0;
     this.frontVideo.addEventListener('timeupdate', () => {
       const curr = this.frontVideo.currentTime;
-      const dur = this.frontVideo.duration || 8.0;
+      const dur = this.frontVideo.duration || 0;
 
       if (curr > 0.05 && !this.frontPoster.classList.contains('hidden')) {
         this.frontPoster.classList.add('hidden');
       }
 
-      // Detect video completion of first loop (either approaching end or wrapped to second loop)
-      if (curr >= dur - 0.25 || (lastFrontTime > dur - 1.5 && curr < 1.0)) {
+      // Unlock scroll once front video finishes or reaches near-end
+      if (dur > 0 && curr >= dur - 0.25) {
         this._unlockScroll();
       }
-
-      lastFrontTime = curr;
     });
 
     this.frontVideo.addEventListener('ended', () => {
@@ -382,7 +272,7 @@ export class CinemaController {
 
     this.frontVideo.currentTime = 0;
     this.frontVideo.muted = true;
-    this.frontVideo.loop = true;
+    this.frontVideo.loop = false;
     this.frontVideo.play().catch((err) => {
       console.warn('[CinemaController] Front video play error:', err);
     });
@@ -418,8 +308,6 @@ export class CinemaController {
    * Reset the experience to beginning (for repeated testing)
    */
   reset() {
-    this._stopGentleAutoScroll();
-    this._hasUserScrolled = false;
     this._stopMonitorLoop();
     this._transitionTriggered = false;
     this._lockScroll();
