@@ -43,7 +43,10 @@ export class CinemaController {
 
     // Both videos are strictly muted per user preference
     if (this.ganeshVideo) this.ganeshVideo.muted = true;
-    if (this.frontVideo) this.frontVideo.muted = true;
+    if (this.frontVideo) {
+      this.frontVideo.muted = true;
+      this.frontVideo.loop = true;
+    }
 
     // Subscribe to state changes for DOM synchronization
     this.fsm.subscribe((nextState, prevState) => {
@@ -56,10 +59,18 @@ export class CinemaController {
     // Setup video event listeners
     this._setupVideoListeners();
 
-    // Hide scroll cue once user starts scrolling
+    // Hide scroll cue once user starts scrolling, and pause/resume video out of viewport to conserve battery
     window.addEventListener('scroll', () => {
       if (window.scrollY > 40 && this.scrollCue) {
         this.scrollCue.style.opacity = '0';
+      }
+
+      if (this.frontVideo && this.frontVideo.loop && !this._isScrollLocked) {
+        if (window.scrollY > window.innerHeight * 1.2) {
+          if (!this.frontVideo.paused) this.frontVideo.pause();
+        } else if (window.scrollY < window.innerHeight * 0.8) {
+          if (this.frontVideo.paused) this.frontVideo.play().catch(() => {});
+        }
       }
     }, { passive: true });
 
@@ -266,6 +277,7 @@ export class CinemaController {
 
     this.frontVideo.currentTime = 0;
     this.frontVideo.muted = true;
+    this.frontVideo.loop = true;
     this.frontVideo.play().catch((err) => {
       console.warn('[CinemaController] Front video play error:', err);
     });
