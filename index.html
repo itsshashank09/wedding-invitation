@@ -36,6 +36,14 @@
           <img id="front-poster" class="scene-media poster" src="/assets/front%20page/frame_0001.jpg" alt="Wedding Invitation Front" />
           <video id="front-video" class="scene-media video" playsinline webkit-playsinline x5-playsinline muted preload="auto" src="/assets/vid/vi1.mp4"></video>
 
+          <!-- Text Shine Overlay Layer (Appears and sweeps right-to-left across text after vi1.mp4 ends) -->
+          <div id="front-text-shine" class="front-text-shine" aria-hidden="true">
+            <div class="front-text-shine-beam"></div>
+          </div>
+
+          <!-- Preload mask asset so Vite bundles it and browser caches it -->
+          <img id="front-text-mask-preload" class="hidden-preload" src="/assets/front%20page/front_text_mask.png" alt="" aria-hidden="true" />
+
           <!-- Subtle Scroll Cue (Appears only after video completes) -->
           <div id="scroll-cue" class="scroll-cue" aria-hidden="true">
             <span class="scroll-cue-text">Scroll to continue</span>

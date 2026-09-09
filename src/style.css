@@ -150,6 +150,107 @@ body {
   background-color: transparent;
 }
 
+/* Hidden Preload Asset (For Vite bundling and instant browser caching) */
+.hidden-preload {
+  position: absolute;
+  width: 0;
+  height: 0;
+  opacity: 0;
+  pointer-events: none;
+  visibility: hidden;
+  z-index: -999;
+}
+
+/* =========================================
+   TEXT SHINE EFFECT (Modern Right-to-Left White Shine)
+   Appears after vi1.mp4 finishes, masked strictly to text
+   ========================================= */
+.front-text-shine {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 3;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+
+  /* Strict typography mask matching the 1080x1920 video frame */
+  -webkit-mask-image: url('/assets/front%20page/front_text_mask.png');
+  mask-image: url('/assets/front%20page/front_text_mask.png');
+  -webkit-mask-size: cover;
+  mask-size: cover;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+
+  /* Blend mode to make the white light illuminate and gleam over the text */
+  mix-blend-mode: screen;
+  will-change: opacity;
+}
+
+.front-text-shine.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Modern Right-to-Left White Shine Beam */
+.front-text-shine-beam {
+  position: absolute;
+  inset: -20% -60%;
+  width: 220%;
+  height: 140%;
+  pointer-events: none;
+  background: linear-gradient(
+    115deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0) 30%,
+    rgba(255, 255, 255, 0.12) 38%,
+    rgba(255, 255, 255, 0.55) 45%,
+    rgba(255, 255, 255, 1) 49%,
+    rgba(255, 255, 255, 0.82) 51%,
+    rgba(255, 255, 255, 1) 53%,
+    rgba(255, 255, 255, 0.55) 57%,
+    rgba(255, 255, 255, 0.12) 64%,
+    rgba(255, 255, 255, 0) 72%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.7));
+  opacity: 0;
+}
+
+.front-text-shine.active .front-text-shine-beam {
+  opacity: 1;
+  /* Right to Left sweep: starts on right (+85%) and travels smoothly to left (-85%) */
+  animation: textShineRightToLeft 4.6s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+  animation-delay: 0.35s;
+}
+
+@keyframes textShineRightToLeft {
+  0% {
+    transform: translate3d(85%, 0, 0);
+    opacity: 0;
+  }
+  3% {
+    opacity: 1;
+  }
+  36% {
+    transform: translate3d(-85%, 0, 0);
+    opacity: 1;
+  }
+  38% {
+    opacity: 0;
+    transform: translate3d(-85%, 0, 0);
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(-85%, 0, 0);
+  }
+}
+
 /* White Flash Transition Bridge */
 .white-flash-bridge {
   position: absolute;

@@ -20,6 +20,8 @@ export class CinemaController {
     this.sceneFront = document.getElementById('scene-front');
     this.frontPoster = document.getElementById('front-poster');
     this.frontVideo = document.getElementById('front-video');
+    this.frontTextShine = document.getElementById('front-text-shine');
+    this.frontTextMaskPreload = document.getElementById('front-text-mask-preload');
     this.scrollCue = document.getElementById('scroll-cue');
 
     this.whiteBridge = document.getElementById('white-flash-bridge');
@@ -59,6 +61,20 @@ export class CinemaController {
 
     // Setup video event listeners
     this._setupVideoListeners();
+
+    // Dynamically link mask image so Vite production hashes are applied seamlessly
+    if (this.frontTextShine && this.frontTextMaskPreload) {
+      const applyMaskUrl = () => {
+        const maskSrc = this.frontTextMaskPreload.currentSrc || this.frontTextMaskPreload.src;
+        if (maskSrc) {
+          const urlStr = `url("${maskSrc}")`;
+          this.frontTextShine.style.webkitMaskImage = urlStr;
+          this.frontTextShine.style.maskImage = urlStr;
+        }
+      };
+      applyMaskUrl();
+      this.frontTextMaskPreload.addEventListener('load', applyMaskUrl);
+    }
 
     // Hide scroll cue once user starts scrolling
     window.addEventListener('scroll', () => {
@@ -110,6 +126,11 @@ export class CinemaController {
 
     if (this.scrollCue) {
       this.scrollCue.classList.add('visible');
+    }
+
+    // Activate the modern right-to-left white text shine
+    if (this.frontTextShine) {
+      this.frontTextShine.classList.add('active');
     }
   }
 
@@ -314,6 +335,10 @@ export class CinemaController {
 
     if (this.scrollCue) {
       this.scrollCue.classList.remove('visible');
+    }
+
+    if (this.frontTextShine) {
+      this.frontTextShine.classList.remove('active');
     }
 
     this.ganeshVideo.pause();
