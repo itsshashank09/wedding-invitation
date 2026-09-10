@@ -76,10 +76,28 @@ export class CinemaController {
       this.frontTextMaskPreload.addEventListener('load', applyMaskUrl);
     }
 
-    // Hide scroll cue once user starts scrolling
+    // Setup interactive click / tap on scroll cue to smoothly scroll to story section
+    if (this.scrollCue) {
+      this.scrollCue.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const target = document.getElementById('section-invitation');
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth' });
+        } else {
+          window.scrollTo({ top: window.innerHeight, behavior: 'smooth' });
+        }
+      });
+    }
+
+    // Hide scroll cue once user starts scrolling down, restore if scrolled back to top
     window.addEventListener('scroll', () => {
-      if (window.scrollY > 40 && this.scrollCue) {
+      if (!this.scrollCue) return;
+      if (window.scrollY > 40) {
         this.scrollCue.style.opacity = '0';
+        this.scrollCue.style.pointerEvents = 'none';
+      } else if (!this._isScrollLocked && this.scrollCue.classList.contains('visible')) {
+        this.scrollCue.style.opacity = '';
+        this.scrollCue.style.pointerEvents = 'auto';
       }
     }, { passive: true });
 
