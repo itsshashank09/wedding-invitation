@@ -941,13 +941,13 @@ body {
 /* Google Map container strictly aligned to circular medallion window */
 .last-page-map-container {
   position: absolute;
-  top: 44.14%;
+  top: 45.31%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: calc(100vh * 9 / 16 * 0.4806);
-  height: calc(100vh * 9 / 16 * 0.4806);
-  width: calc(100svh * 9 / 16 * 0.4806);
-  height: calc(100svh * 9 / 16 * 0.4806);
+  width: calc(100vh * 9 / 16 * 0.5139);
+  height: calc(100vh * 9 / 16 * 0.5139);
+  width: calc(100svh * 9 / 16 * 0.5139);
+  height: calc(100svh * 9 / 16 * 0.5139);
   aspect-ratio: 1 / 1;
   border-radius: 50%;
   overflow: hidden;
