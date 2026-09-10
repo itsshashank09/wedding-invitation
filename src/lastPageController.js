@@ -16,7 +16,8 @@ export class LastPageController {
     this.activeVideo = this.videoA;
     this.standbyVideo = this.videoB;
     this.isTransitioning = false;
-    this.fadeDuration = 0.45; // 450ms crossfade window
+    this.playbackRate = 0.75;
+    this.fadeDuration = 0.5; // Crossfade window in video seconds
     this._observer = null;
     this._userInteracted = false;
 
@@ -33,14 +34,22 @@ export class LastPageController {
       return;
     }
 
-    // Configure both videos
+    // Configure both videos with 0.75x playback speed
     [this.videoA, this.videoB].forEach((vid) => {
       if (!vid) return;
       vid.muted = true;
       vid.playsInline = true;
       vid.loop = false; // Handled programmatically for glitchless crossfade
+      vid.defaultPlaybackRate = this.playbackRate;
+      vid.playbackRate = this.playbackRate;
       vid.addEventListener('timeupdate', this._onTimeUpdate);
       vid.addEventListener('ended', this._onEnded);
+      vid.addEventListener('play', () => {
+        vid.playbackRate = this.playbackRate;
+      });
+      vid.addEventListener('loadedmetadata', () => {
+        vid.playbackRate = this.playbackRate;
+      });
     });
 
     // One-time interaction fallback to satisfy strict mobile autoplay policies
@@ -67,11 +76,12 @@ export class LastPageController {
       this._playActive();
     }
 
-    console.log('[LastPageController] Glitchless video loop initialized');
+    console.log('[LastPageController] Glitchless video loop initialized at 0.75x speed');
   }
 
   _playActive() {
     if (!this.activeVideo) return;
+    this.activeVideo.playbackRate = this.playbackRate;
     const playPromise = this.activeVideo.play();
     if (playPromise !== undefined) {
       playPromise.catch((err) => {
@@ -120,14 +130,16 @@ export class LastPageController {
     if (!this.standbyVideo) {
       // Single video fallback
       this.activeVideo.currentTime = 0;
+      this.activeVideo.playbackRate = this.playbackRate;
       this.activeVideo.play().catch(() => {});
       return;
     }
 
     this.isTransitioning = true;
 
-    // Reset standby video position and start playing immediately
+    // Reset standby video position and enforce 0.75x rate
     this.standbyVideo.currentTime = 0;
+    this.standbyVideo.playbackRate = this.playbackRate;
     const p = this.standbyVideo.play();
     if (p !== undefined) {
       p.catch(() => {});
@@ -136,6 +148,9 @@ export class LastPageController {
     // Smooth opacity crossfade via CSS class
     this.standbyVideo.classList.add('active');
     this.activeVideo.classList.remove('active');
+
+    // Real-world duration of fade in milliseconds: (fadeDuration / playbackRate) * 1000
+    const realFadeMs = Math.round((this.fadeDuration / this.playbackRate) * 1000);
 
     setTimeout(() => {
       // Pause previously active video and rewind
@@ -149,7 +164,7 @@ export class LastPageController {
       this.activeVideo = this.standbyVideo;
       this.standbyVideo = temp;
       this.isTransitioning = false;
-    }, Math.round(this.fadeDuration * 1000));
+    }, realFadeMs);
   }
 
   destroy() {
