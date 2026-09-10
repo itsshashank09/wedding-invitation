@@ -909,20 +909,60 @@ body {
   z-index: 10;
 }
 
+/* Last Page Looping Video Background */
+.last-page-video-container {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 1;
+  pointer-events: none;
+  background-color: #060504;
+}
+
+.last-page-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  opacity: 0;
+  transition: opacity 0.45s ease-in-out;
+  pointer-events: none;
+  will-change: opacity;
+}
+
+.last-page-video.active {
+  opacity: 1;
+}
+
 /* Google Map container strictly aligned to circular medallion window */
 .last-page-map-container {
   position: absolute;
   top: 42.6%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 54%;
-  max-width: calc(100svh * (941 / 1672) * 0.54);
+  width: 50.8%;
+  max-width: calc(100svh * (9 / 16) * 0.508);
   aspect-ratio: 1 / 1;
   border-radius: 50%;
   overflow: hidden;
-  z-index: 1; /* Underneath the background with cutout */
+  z-index: 5; /* Elevate on top of video layer so map is fully interactive and framed */
   background-color: #1a160d;
-  box-shadow: 0 0 25px rgba(0, 0, 0, 0.8), inset 0 0 15px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.9),
+              0 0 16px rgba(212, 175, 55, 0.45),
+              inset 0 0 16px rgba(0, 0, 0, 0.75);
+  border: 2px solid rgba(226, 188, 88, 0.75);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.last-page-map-container:hover {
+  border-color: rgba(255, 225, 120, 0.95);
+  box-shadow: 0 0 32px rgba(0, 0, 0, 0.95),
+              0 0 24px rgba(235, 195, 75, 0.65),
+              inset 0 0 16px rgba(0, 0, 0, 0.75);
 }
 
 .last-page-map-container iframe {
@@ -930,17 +970,7 @@ body {
   height: 100%;
   display: block;
   border: 0;
-}
-
-.last-page-bg {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-  pointer-events: none;
-  z-index: 2; /* Frame layers on top so golden circle border frames the map */
+  pointer-events: auto;
 }
 
 /* Footer container pinned to the bottom of the last page */
