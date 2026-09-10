@@ -197,7 +197,7 @@ body {
   visibility: visible;
 }
 
-/* Modern Right-to-Left White Shine Beam */
+/* Modern Left-to-Right White Shine Beam (Slow, Smooth & Luxurious) */
 .front-text-shine-beam {
   position: absolute;
   inset: -20% -60%;
@@ -207,47 +207,47 @@ body {
   background: linear-gradient(
     115deg,
     rgba(255, 255, 255, 0) 0%,
-    rgba(255, 255, 255, 0) 30%,
-    rgba(255, 255, 255, 0.12) 38%,
-    rgba(255, 255, 255, 0.55) 45%,
-    rgba(255, 255, 255, 1) 49%,
-    rgba(255, 255, 255, 0.82) 51%,
-    rgba(255, 255, 255, 1) 53%,
-    rgba(255, 255, 255, 0.55) 57%,
-    rgba(255, 255, 255, 0.12) 64%,
-    rgba(255, 255, 255, 0) 72%,
+    rgba(255, 255, 255, 0) 24%,
+    rgba(255, 255, 255, 0.05) 32%,
+    rgba(255, 255, 255, 0.25) 40%,
+    rgba(255, 255, 255, 0.65) 46%,
+    rgba(255, 255, 255, 0.95) 50%,
+    rgba(255, 255, 255, 0.65) 54%,
+    rgba(255, 255, 255, 0.25) 60%,
+    rgba(255, 255, 255, 0.05) 68%,
+    rgba(255, 255, 255, 0) 76%,
     rgba(255, 255, 255, 0) 100%
   );
-  filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.7));
+  filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.65));
   opacity: 0;
 }
 
 .front-text-shine.active .front-text-shine-beam {
   opacity: 1;
-  /* Right to Left sweep: starts on right (+85%) and travels smoothly to left (-85%) */
-  animation: textShineRightToLeft 4.6s cubic-bezier(0.22, 1, 0.36, 1) infinite;
-  animation-delay: 0.35s;
+  /* Left to Right sweep: starts softly on the left (-90%) and glides across to the right (+90%) */
+  animation: textShineLeftToRight 5.8s cubic-bezier(0.35, 0, 0.25, 1) infinite;
+  animation-delay: 0.5s;
 }
 
-@keyframes textShineRightToLeft {
+@keyframes textShineLeftToRight {
   0% {
-    transform: translate3d(85%, 0, 0);
+    transform: translate3d(-90%, 0, 0);
     opacity: 0;
   }
-  3% {
+  4% {
     opacity: 1;
   }
-  36% {
-    transform: translate3d(-85%, 0, 0);
+  48% {
+    transform: translate3d(90%, 0, 0);
     opacity: 1;
   }
-  38% {
+  50% {
     opacity: 0;
-    transform: translate3d(-85%, 0, 0);
+    transform: translate3d(90%, 0, 0);
   }
   100% {
     opacity: 0;
-    transform: translate3d(-85%, 0, 0);
+    transform: translate3d(-90%, 0, 0);
   }
 }
 
